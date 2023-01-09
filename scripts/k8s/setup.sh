@@ -14,3 +14,6 @@ kubectl create clusterrolebinding \
     admin-user \
     --clusterrole cluster-admin \
     --serviceaccount=kubernetes-dashboard:admin-user
+
+# Set up mesh one
+kubectl apply -f ./mesh/one.yml

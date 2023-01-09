@@ -1,0 +1,42 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: meshone
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: beacon-alpha-deployment
+  namespace: meshone
+  labels:
+    app: beacon-alpha
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: beacon-alpha
+  template:
+    metadata:
+      labels:
+        app: beacon-alpha
+    spec:
+      containers:
+      - name: beacon
+        image: troydai/grpcbeacon:v0.2.0
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: beacon-alpha
+  namespace: meshone
+spec:
+  selector:
+    app: beacon-alpha
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+---

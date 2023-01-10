@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
       - name: beacon
-        image: troydai/grpcbeacon:v0.3.1
+        image: troydai/grpcbeacon:v0.3.2
         ports:
         - containerPort: 8080
 ---

@@ -4,6 +4,15 @@ kind: Namespace
 metadata:
   name: meshone
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: beacon-config
+  namespace: meshone
+data:
+  beacon-alpha.flockname: beacon-alpha
+  beacon-beta.flockname: beacon-beta
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -23,9 +32,15 @@ spec:
     spec:
       containers:
       - name: beacon
-        image: troydai/grpcbeacon:v0.3.2
+        image: troydai/grpcbeacon:v0.4.0
         ports:
         - containerPort: 8080
+        env:
+        - name: FLOCKNAME
+          valueFrom:
+            configMapKeyRef:
+              name: beacon-config
+              key: beacon-alpha.flockname
 ---
 apiVersion: v1
 kind: Service
@@ -35,6 +50,48 @@ metadata:
 spec:
   selector:
     app: beacon-alpha
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: beacon-beta-deployment
+  namespace: meshone
+  labels:
+    app: beacon-beta
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: beacon-beta
+  template:
+    metadata:
+      labels:
+        app: beacon-beta
+    spec:
+      containers:
+      - name: beacon
+        image: troydai/grpcbeacon:v0.4.0
+        ports:
+        - containerPort: 8080
+        env:
+        - name: FLOCKNAME
+          valueFrom:
+            configMapKeyRef:
+              name: beacon-config
+              key: beacon-beta.flockname
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: beacon-beta
+  namespace: meshone
+spec:
+  selector:
+    app: beacon-beta
   ports:
     - protocol: TCP
       port: 8080

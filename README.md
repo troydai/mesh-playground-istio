@@ -4,13 +4,16 @@
 
 ### Set up the environment locally with kind
 
-```
-$ make setup
+``` bash
+make setup
 ```
 
 ### Tear down the local environment
 
-```
-$ make teardown
+``` bash
+make teardown
 ```
 
+## References
+
+Set up load balancer in Kind [https://kind.sigs.k8s.io/docs/user/loadbalancer/]

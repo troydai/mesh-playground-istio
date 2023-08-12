@@ -41,6 +41,13 @@ spec:
             configMapKeyRef:
               name: beacon-config
               key: beacon-alpha.flockname
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 200m
+            memory: 200Mi
 ---
 apiVersion: v1
 kind: Service
@@ -83,6 +90,13 @@ spec:
             configMapKeyRef:
               name: beacon-config
               key: beacon-beta.flockname
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 200m
+            memory: 200Mi
 ---
 apiVersion: v1
 kind: Service

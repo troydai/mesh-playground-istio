@@ -1,4 +1,4 @@
-.PHONY: setup teardown
+.PHONY: setup teardown install-workloads uninstall-workloads
 
 CLUSTER_NAME=istio-playground
 
@@ -11,7 +11,7 @@ setup:
        	--selector=app=metallb \
        	--timeout=90s
 	@ kubectl apply -f config/kind/metallb-config.yaml
-	@ istioctl install --set profile=ambient --skip-confirmation --verify
+	@ istioctl install --skip-confirmation --verify --set values.pilot.env.ENABLE_NATIVE_SIDECARS=true
 	@ kubectl apply -f mesh/workloads.yml
 	@ kubectl apply -f mesh/gateway.yml
 
@@ -20,10 +20,8 @@ teardown:
 
 install-workloads:
 	@ kubectl create ns httpbin-red
-	@ kubectl label namespace httpbin-red istio.io/dataplane-mode=ambient
 	@ helm install -n httpbin-red httpbin-red charts/httpbin
 	@ kubectl create ns httpbin-blue
-	@ kubectl label namespace httpbin-blue istio.io/dataplane-mode=ambient
 	@ helm install -n httpbin-blue httpbin-blue charts/httpbin
 
 uninstall-workloads:
